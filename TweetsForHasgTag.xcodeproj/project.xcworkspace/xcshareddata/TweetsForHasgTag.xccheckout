@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>90F8F1CD-8202-47BE-A0CA-E5E80B9E3596</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TweetsForHasgTag</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>9BAA7BA62D9A406171430FE337A7A54AAA0AA09F</key>
+		<string>https://github.com/vvghost1/TweetsForHash.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>TweetsForHasgTag.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>9BAA7BA62D9A406171430FE337A7A54AAA0AA09F</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/vvghost1/TweetsForHash.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>9BAA7BA62D9A406171430FE337A7A54AAA0AA09F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>9BAA7BA62D9A406171430FE337A7A54AAA0AA09F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TweetsForHash</string>
+		</dict>
+	</array>
+</dict>
+</plist>

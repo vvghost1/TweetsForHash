@@ -8,19 +8,23 @@
 
 import Foundation
 
-class Token {
-    
-    var bearerToken: String! {
-        didSet{
+class Token
+{
+    var bearerToken: String!
+    {
+        didSet
+        {
             if (bearerToken != nil)
-            {NSNotificationCenter.defaultCenter().postNotificationName("tokenReady", object: nil)
-            }}}
+            {
+                NSNotificationCenter.defaultCenter().postNotificationName("tokenReady", object: nil)
+            }
+        }
+    }
 
     let bearerTokenDefaultsKey = "bearerToken"
     let hostUrl = "https://api.twitter.com/oauth2/token"
     let headerStr = "application/x-www-form-urlencoded;charset=UTF-8"
     let bodyStr = "grant_type=client_credentials"
-    //let bodyStr: Dictionary<String> = ["grant_type=client_credentials"]
     
     let consumerKey = "u5aOPiL8xU7As8WGxI5vH916X"
     let consumerSecret = "FHPXgnaxCIRENLcvMLRPCNQuvrMrYV0JXdQGNT4C8MIeiJDKPo"
@@ -82,7 +86,4 @@ class Token {
             }
         }).resume()
     }
-    
-    
-    
 }

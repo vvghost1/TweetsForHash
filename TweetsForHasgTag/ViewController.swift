@@ -8,19 +8,12 @@
 
 import UIKit
 
-//СПРОСИТЬ ПРО ПОДДЕРЖКУ АЙПАДА
-
-
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var indicator: UIActivityIndicatorView!
+class ViewController: UIViewController
+{
     var z: Token! = Token()
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
         if let mvc = segue.destinationViewController as? MainViewController
         {
             mvc.bearerToken = z.bearerToken
@@ -28,7 +21,8 @@ class ViewController: UIViewController {
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(animated: Bool)
+    {
         super.viewDidAppear(animated)
         if(z.bearerToken != nil)
         {
@@ -37,17 +31,9 @@ class ViewController: UIViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "zTdone", name: "tokenReady", object: nil)
     }
     
-    
     func zTdone()
     {
         performSegueWithIdentifier("loadIsFinished", sender: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
 

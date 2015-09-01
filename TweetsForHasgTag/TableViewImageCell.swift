@@ -8,40 +8,37 @@
 
 import UIKit
 
-class TableViewImageCell: TableViewCell {
-
+class TableViewImageCell: TableViewCell
+{
     override var name: String{didSet{nameLabel.text = name}}
     override var content: String{didSet{contentLabel.text = content}}
-    override var imageArr: [UIImage]? {didSet{
-        imageLabel.image = nil
-        if imageArr != nil
+    override var profileImg: UIImage?{didSet{profileImgLabel.image = profileImg}}
+    override var imageArr: [UIImage]?
+    {
+        didSet
         {
-            if imageArr!.count > 0
+            imageLabel.image = nil
+            if imageArr != nil
             {
-                imageLabel.image = imageArr![0]
+                if imageArr!.count > 0
+                {
+                    imageLabel.image = imageArr![0]
+                }
             }
         }
-    }}
-    override var profileImg: UIImage?{didSet{profileImgLabel.image = profileImg}}
+    }
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var imageLabel: UIImageView!
     @IBOutlet weak var profileImgLabel: UIImageView!
     
-    override func awakeFromNib() {
+    override func awakeFromNib()
+    {
         super.awakeFromNib()
         profileImgLabel.layer.cornerRadius = CGFloat(4.0)
         profileImgLabel.clipsToBounds = true
         imageLabel.layer.cornerRadius = CGFloat(8.0)
         imageLabel.clipsToBounds = true
-        
     }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

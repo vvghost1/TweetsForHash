@@ -8,19 +8,21 @@
 
 import UIKit
 
-class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, DataModelDelegate {
-
+class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, DataModelDelegate
+{
     var cellWidth: [CGFloat!] = [nil,nil]
+    var searchText: String! = nil
     @IBOutlet weak var tableView: UITableView!
     var bearerToken: String!
-    var dataModel = DataModel()
+    var dataModel: DataModel!
     var spinner = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
     var refreshControl = UIRefreshControl()
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-        dataModel.bearerToken = bearerToken
-        dataModel.delegate=self
+        dataModel = DataModel(bearerToken: bearerToken)
+        dataModel.delegate = self
         
         tableView.estimatedRowHeight = 275.0
         spinner.color = UIColor.blackColor()
@@ -31,13 +33,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "dataModelPerformReturn", name: "dataReady", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadSomeCells", name: "reloadSomeCells", object: nil)
-        
     }
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     
 // MARK: - data model protocol
     func didRecieveTextDataForStartOfTable(newData: [Data], forSearchString str: String)
@@ -53,21 +49,17 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             tableView.setContentOffset(CGPointZero, animated: true)
         }
     }
+    
     func didRecieveTextDataForEndOfTable(newData: [Data], forSearchString str: String)
     {
-        if str != searchText
-        {
-            return
-        }
+        if str != searchText {return}
         dataModel.data += newData
         dataModelPerformReturn()
     }
+    
     func didRecieveMedia(newMedia: [UIImage], forSearchString str: String, forId id: String, isFirstAvatar avatar: Bool)
     {
-        if str != searchText
-        {
-            return
-        }
+        if str != searchText {return}
         if let indexInData = find(dataModel.data.map{$0.id}, id)
         {
             var media = newMedia
@@ -77,34 +69,32 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             if dataModel.data[indexInData].tweet.image != nil
             {
-            dataModel.data[indexInData].tweet.image! += media
+                dataModel.data[indexInData].tweet.image! += media
             }
             else
             {
-            dataModel.data[indexInData].tweet.image = media
+                dataModel.data[indexInData].tweet.image = media
             }
             reloadSomeCells()
-            
         }
-
     }
+    
     func requestForCleanRangeFromMedia(range: Range<Int>, forSearchString str: String)
     {
-        if str != searchText
-        {
-            return
-        }
+        if str != searchText {return}
         for index in range
         {
             dataModel.data[index].tweet.profileImg = nil
             dataModel.data[index].tweet.image = nil
         }
     }
+    
     func askForTotallyNewSearch()
     {
         reCreateDataModel()
         dataModel.performNext(searchText)
     }
+    
     func reCreateDataModel()
     {
         dataModel = DataModel(bearerToken: bearerToken)
@@ -112,11 +102,14 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         dataModelPerformReturn()
     }
     
+    
 // MARK: autoupdate
     var autoUpdate = false
-        {didSet
+    {
+        didSet
         {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)){
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0))
+            {
                 while self.autoUpdate
                 {
                     sleep(10)
@@ -124,49 +117,53 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     {
                         if let text = self.searchText
                         {
-                            
                             if text != ""
                             {
                                 self.dataModel.performNewTweets(text)
                             }
                         }
-                    }}
+                    }
+                }
             }
-        }}
+        }
+    }
     
     @IBOutlet weak var autoButton: UIButton!
     
-    @IBAction func autoTweetUpdate(sender: UIButton) {
+    @IBAction func autoTweetUpdate(sender: UIButton)
+    {
         if !autoUpdate
         {
-            dispatch_async(dispatch_get_main_queue()){
+            dispatch_async(dispatch_get_main_queue())
+            {
                 self.autoUpdate = true
-                self.autoButton.highlighted = true}
+                self.autoButton.highlighted = true
+            }
         }
         else
         {
-            dispatch_async(dispatch_get_main_queue()){
+            dispatch_async(dispatch_get_main_queue())
+            {
                 self.autoUpdate = false
-                self.autoButton.highlighted = false}
+                self.autoButton.highlighted = false
+            }
         }
-        
     }
-
-    
-    
     
     
 // MARK: textField protocol
     
     
     @IBOutlet weak var hashtagField: UITextField!
-    var searchText: String! = nil
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(textField: UITextField) -> Bool
+    {
         textField.resignFirstResponder()
         return true
     }
-    func textFieldDidEndEditing(textField: UITextField) {
+    
+    func textFieldDidEndEditing(textField: UITextField)
+    {
         var arr = (split(textField.text){$0 == " "})
         if arr.count == 0
         {
@@ -174,7 +171,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             {
                 if searchText != ""
                 {
-                    textField.text = "#" + searchText}}
+                    textField.text = "#" + searchText
+                }
+            }
             return
         }
         var text = arr[0]
@@ -193,31 +192,32 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         {
             searchText = text
             askForTotallyNewSearch()
-            //tableView.reloadData()
-            
         }
     }
 
     
 // MARK: TableView protocol
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         return dataModel.data.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
         let cell = tableView.dequeueReusableCellWithIdentifier(dataModel.data[indexPath.row].cellType, forIndexPath: indexPath) as! TableViewCell
         
-        self.dataModel.initThisCell(cell, row: indexPath.row)
+        dataModel.initThisCell(cell, row: indexPath.row)
         return cell
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath)
+    {
         if indexPath.row < dataModel.offset
         {
             dataModel.refillSpase(areWeRefillingStart: true, row: indexPath.row)
@@ -226,18 +226,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         {
             dataModel.refillSpase(areWeRefillingStart: false, row: indexPath.row)
         }
-        if indexPath.row >= self.dataModel.data.count - 2 && self.searchText != nil && !self.dataModel.searchEnded
+        if indexPath.row >= dataModel.data.count - 3 && searchText != nil && !dataModel.searchEnded
         {
-            self.footView(true)
-            self.dataModel.performNext(self.searchText)
+            footView(true)
+            dataModel.performNext(searchText)
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    {
         return calculateCellHeight(indexPath.row)
     }
     
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    {
         return calculateCellHeight(indexPath.row)
     }
     
@@ -263,23 +265,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         myLabel.font = UIFont.systemFontOfSize(17.0)
         myLabel.text = dataModel.data[row].tweet.text
         myLabel.sizeToFit()
-        if dataModel.data[row].cellType == "defaultCell"
+        dataModel.data[row].cellHeight[orient] = myLabel.frame.height + 47
+        if dataModel.data[row].cellType != "defaultCell"
         {
-            dataModel.data[row].cellHeight[orient] = myLabel.frame.height + 47
-        }
-        else
-        {
-            dataModel.data[row].cellHeight[orient] = myLabel.frame.height + 47 + 208
+            dataModel.data[row].cellHeight[orient]! += CGFloat(208)
         }
         return dataModel.data[row].cellHeight[orient]
-
     }
-    
-    
-
-    
-    
-    
     
     
 // MARK: some refresh stuff
@@ -288,35 +280,38 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     {
         if searchText != nil
         {
-            self.dataModel.performNewTweets(self.searchText)
+            dataModel.performNewTweets(searchText)
         }
         else
         {
             refreshControl.endRefreshing()
         }
     }
+    
     func dataModelPerformReturn()
     {
-        dispatch_async(dispatch_get_main_queue()){
-        if self.refreshControl.refreshing
+        dispatch_async(dispatch_get_main_queue())
         {
-            self.refreshControl.endRefreshing()
-        }
-        if self.tableView.tableFooterView != nil
-        {
-        self.footView(false)
-        }
-        
-        self.tableView.reloadData()
-        
+            if self.refreshControl.refreshing
+            {
+                self.refreshControl.endRefreshing()
+            }
+            if self.tableView.tableFooterView != nil
+            {
+                self.footView(false)
+            }
+            self.tableView.reloadData()
         }
     }
+    
     func reloadSomeCells()
     {
-        dispatch_async(dispatch_get_main_queue()){
-        self.tableView.reloadData() //?
+        dispatch_async(dispatch_get_main_queue())
+        {
+            self.tableView.reloadData()
         }
     }
+    
     func footView(status: Bool)
     {
         if status

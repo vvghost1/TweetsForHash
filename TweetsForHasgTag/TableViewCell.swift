@@ -8,25 +8,10 @@
 
 import UIKit
 
-class TableViewCell: UITableViewCell {
-
-    
+class TableViewCell: UITableViewCell
+{
     var name: String = ""
     var content: String = ""
     var profileImg: UIImage?
     var imageArr: [UIImage]?
-    
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        //contentView.autoresizingMask = UIViewAutoresizing.FlexibleHeight
-    }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }
